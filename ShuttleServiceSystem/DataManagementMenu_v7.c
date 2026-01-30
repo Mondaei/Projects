@@ -5,7 +5,7 @@ program was run, tested, and debugged by my own efforts. I further certify that 
 otherwise plagiarized the work of other students and/or persons.
 Geslani, Keila Franchoise Leigh, DLSU ID# 12206997
 *********************************************************************************************************/
-#include "structv2.h"  // include header file that contains structs
+#include "struct_v7.h"  // include header file that contains structs
 
 /* This function is for storing tripNum
 	@param app[]
