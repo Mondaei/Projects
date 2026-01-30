@@ -187,11 +187,11 @@ void Passenger(appointment app[], int *userCounter){
 		scanf("%d", &choice); 
 	  	switch (choice){
 		    case 1:
-		    	strcpy(app[*userCounter].place, "Manila Campus");
+		    	strcpy(app[*userCounter].place, "Manila");
 		    	MNLtoLGN(app, userCounter);
 		      	break;
 		    case 2:
-		    	strcpy(app[*userCounter].place, "Laguna Campus");
+		    	strcpy(app[*userCounter].place, "Laguna");
 		      	LGNtoMNL(app, userCounter);
 		     	break;
 			default:

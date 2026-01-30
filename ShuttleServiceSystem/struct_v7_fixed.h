@@ -13,6 +13,7 @@ Geslani, Keila Franchoise Leigh, DLSU ID# 12206997
 #define MAX_TRIPCAPWORST 17
 
 typedef char string12[13];
+typedef char string15[16];  // Added for campus names
 typedef char string20[21];
 typedef char string50[51];
 
@@ -23,6 +24,6 @@ typedef struct{
 	int idNum;
 	int tripNum;
 	string50 DropPoint;
-	string12 place;
+	string15 place;
 	int status;
 }appointment;
