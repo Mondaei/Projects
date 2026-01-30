@@ -1,0 +1,33 @@
+Coke,Coca Cola,Beverages,100.0,51,2027-11-06
+Dairy Milk,Cadbury,Food,50.0,58,2027-11-13
+Spam,Hormel,Food,259.0,100,2027-11-06
+Tuseran,Generic,Medications,890.0,1000,2027-11-06
+Tide Detergent Powder,Tide,Cleaning Products,125.0,500,2027-11-06
+Hair Fall Control Shampoo,Pantene,Toiletries,400.0,370,2027-11-06
+Dove Deodorant,Dove,Toiletries,269.0,1000,2027-11-06
+Dove Shampoo,Dove,Toiletries,300.0,800,2027-11-06
+Mr Muscle,Mr Muscle,Cleaning Products,400.0,300,2027-11-06
+Oreo Cookies,Nabisco,Food,151.0,500,2027-11-06
+Kellogg’s Corn Flakes,Kellogg’s,Food,242.0,500,2027-11-06
+Nutella Hazelnut Spread,Ferrero,Food,432.0,400,2027-11-06
+Lay’s Classic Potato Chips,PepsiCo,Food,245.0,153,2027-11-06
+Heinz Tomato Ketchup,Heinz,Food,532.0,5,2027-11-06
+Pepsi,PepsiCo,Beverages,231.0,1241,2027-11-06
+Red Bull Energy Drink,Red Bull GmbH,Beverages,124.0,123,2027-11-06
+Tropicana Orange Juice,Tropicana (PepsiCo),Beverages,245.0,7,2027-11-06
+Lipton Iced Tea – Lipton,(Unilever/PepsiCo),Beverages,124.0,124,2027-11-06
+Dove Body Wash,Dove,Beverages,463.0,124,2027-11-06
+Colgate Toothpaste,Colgate,Toiletries,234.0,124,2027-11-06
+Head & Shoulders Shampoo,P&G,Toiletries,214.0,124,2027-11-06
+Nivea Body Lotion,Nivea,Toiletries,124.0,124,2027-11-06
+L’Oréal Paris Conditioner,L’Oréal,Toiletries,334.0,124,2027-11-06
+Clorox Disinfecting Wipes,Clorox,Cleaning Products,453.0,1124,2027-11-06
+Mr. Clean Multi-Surface Cleaner,P&G,Cleaning Products,235.0,1324,2027-11-06
+Lysol Disinfectant Spray,Lysol,Cleaning Products,346.0,235,2027-11-06
+Vim Cream Cleaner,Unilever,Cleaning Products,435.0,235,2027-11-06
+Tide Laundry Detergent,P&G,Cleaning Products,352.0,124,2027-11-06
+Tylenol (Acetaminophen),Johnson & Johnson,Medications,325.0,214,2027-11-06
+Advil,Pfizer,Medications,124.0,1513,2028-11-04
+Benadryl (Diphenhydramine),Johnson & Johnson,Medications,353.0,325,2028-11-04
+Tums (Antacid),GlaxoSmithKline,Medications,234.0,235,2027-11-06
+Vicks Vaporub,P&G,Medications,355.0,125,2028-11-04
