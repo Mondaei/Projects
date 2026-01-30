@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/keilageslani/Documents/Projects/Projects/ShuttleServiceSystem/ServiceSystem_v7_fixed'
+relocations:     []
+...

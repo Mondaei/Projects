@@ -6,11 +6,11 @@ otherwise plagiarized the work of other students and/or persons.
 Geslani, Keila Franchoise Leigh, DLSU ID# 12206997
 *********************************************************************************************************/
 
-#include "DataManagementMenu_v7.c"
+#include "DataManagementMenu_v7_fixed.c"
 
 int main(){
     int choice;
-    char currentDate[16];
+    char currentDate[20];  // FIXED: Increased size for safety
     appointment app[MAX_USERS];
     int user = 0;
     char day[3];

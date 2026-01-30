@@ -5,7 +5,7 @@ program was run, tested, and debugged by my own efforts. I further certify that 
 otherwise plagiarized the work of other students and/or persons.
 Geslani, Keila Franchoise Leigh, DLSU ID# 12206997
 *********************************************************************************************************/
-#include "struct_v7.h"  // include header file that contains structs
+#include "struct_v7_fixed.h"  // include header file that contains structs
 
 /* This function is for storing tripNum
 	@param app[]
@@ -14,51 +14,53 @@ Geslani, Keila Franchoise Leigh, DLSU ID# 12206997
 void MNLtoLGN(appointment app[], int *userCounter){
 	int choice;
     
-	printf("=== Manila to Laguna ===\n");
-    printf("Please Select a Schedule.\n");
-    printf("     Trip Number    ETD\n");
-    printf("1.    AE101 	 6:00 am\n");
-    printf("2.    AE102      7:30 am\n");
-    printf("3.    AE103      9:30 am\n");
-    printf("4.    AE104      11:00 am\n");
-    printf("5.    AE105      1:00 pm\n");
-    printf("6.    AE106      2:30 pm\n");
-    printf("7.    AE107      3:30 pm\n");
-    printf("8.    AE108      5:00 pm\n");
-    printf("9.    AE109      6:15 pm\n");
-	printf("Enter your choice: ");
-    scanf("%d", &choice);
-    switch (choice){
-		case 1:
-			app[*userCounter].tripNum = 101;
-			break;
-        case 2:
-            app[*userCounter].tripNum = 102;
-            break;
-        case 3:
-            app[*userCounter].tripNum = 103;
-            break;
-        case 4:
-            app[*userCounter].tripNum = 104;
-            break;
-        case 5:
-            app[*userCounter].tripNum = 105;
-            break;
-        case 6:
-            app[*userCounter].tripNum = 106;
-            break;
-        case 7:
-            app[*userCounter].tripNum = 107;
-            break;
-        case 8:
-            app[*userCounter].tripNum = 108;
-            break;
-        case 9:
-            app[*userCounter].tripNum = 109;
-            break;
-        default:
-        	printf("Invalid choice. Please try again.\n");
-    }while(choice != 1 && choice != 2 && choice != 3 && choice != 4 && choice != 5 && choice != 6 && choice != 7 && choice != 8 && choice != 9);
+	do{  // FIXED: Added missing 'do' statement
+		printf("=== Manila to Laguna ===\n");
+	    printf("Please Select a Schedule.\n");
+	    printf("     Trip Number    ETD\n");
+	    printf("1.    AE101 	 6:00 am\n");
+	    printf("2.    AE102      7:30 am\n");
+	    printf("3.    AE103      9:30 am\n");
+	    printf("4.    AE104      11:00 am\n");
+	    printf("5.    AE105      1:00 pm\n");
+	    printf("6.    AE106      2:30 pm\n");
+	    printf("7.    AE107      3:30 pm\n");
+	    printf("8.    AE108      5:00 pm\n");
+	    printf("9.    AE109      6:15 pm\n");
+		printf("Enter your choice: ");
+	    scanf("%d", &choice);
+	    switch (choice){
+			case 1:
+				app[*userCounter].tripNum = 101;
+				break;
+	        case 2:
+	            app[*userCounter].tripNum = 102;
+	            break;
+	        case 3:
+	            app[*userCounter].tripNum = 103;
+	            break;
+	        case 4:
+	            app[*userCounter].tripNum = 104;
+	            break;
+	        case 5:
+	            app[*userCounter].tripNum = 105;
+	            break;
+	        case 6:
+	            app[*userCounter].tripNum = 106;
+	            break;
+	        case 7:
+	            app[*userCounter].tripNum = 107;
+	            break;
+	        case 8:
+	            app[*userCounter].tripNum = 108;
+	            break;
+	        case 9:
+	            app[*userCounter].tripNum = 109;
+	            break;
+	        default:
+	        	printf("Invalid choice. Please try again.\n");
+	    }
+	}while(choice != 1 && choice != 2 && choice != 3 && choice != 4 && choice != 5 && choice != 6 && choice != 7 && choice != 8 && choice != 9);
 	// Repeat until a valid choice between (1-9) is entered
 }
 /* This function is for storing tripNum
@@ -137,7 +139,7 @@ void Passenger(appointment app[], int *userCounter){
   	printf("=================== Passenger ==================");
   	printf("\nPlease fill out your embarkation card.\n");
   	printf("Name FN LN: ");
-  	scanf("%s %s", app[*userCounter].fname, app[*userCounter].lname);
+  	scanf("%19s %19s", app[*userCounter].fname, app[*userCounter].lname);  // FIXED: Added field width limit
 	printf("ID Number: ");
   	scanf("%d", &app[*userCounter].idNum);
   	
@@ -318,15 +320,16 @@ void Passenger(appointment app[], int *userCounter){
 */
 void ViewRecentTrip(appointment app[]){
     int i;
-	char fileName[9]; // This is the filename, the user want to view
+	char fileName[50];  // FIXED: Increased buffer size for safety
 	FILE *fp_in;
 
     printf ("Enter the date you want to view with this format Trip-DD-MM-YYYY: "); // Allows the user to specify the filename of the text file the user want to view
-	scanf ("%s", fileName);
+	scanf ("%49s", fileName);  // FIXED: Added field width limit
     fp_in = fopen (fileName, "r"); // opens the file to read and scan into the array of structs
 					
 	if (fp_in == NULL){
         perror("Cannot Find File, Please Try Again.\n");
+        return;  // FIXED: Added return to prevent further processing
     }
     char buffer[256]; // Assuming each line in the file is no longer than 255 characters
     while (fgets(buffer, sizeof(buffer), fp_in) != NULL) {
@@ -342,9 +345,17 @@ void ViewRecentTrip(appointment app[]){
 void ExitMenu(appointment app[], int userCounter, char *currentDate){
     int i;
 	FILE *fp_out1;
+	char filename[50];  // FIXED: Create local copy to avoid modifying original
 	
-	strcat(currentDate, ".txt");
-    fp_out1 = fopen (currentDate, "w"); // Exports all current data into the current date
+	strcpy(filename, currentDate);
+	strcat(filename, ".txt");
+    fp_out1 = fopen (filename, "w"); // Exports all current data into the current date
+    
+    if (fp_out1 == NULL) {  // FIXED: Added file open check
+        perror("Error opening file for writing");
+        return;
+    }
+    
     for (i = 0; i < userCounter; i++){
       if (i == 0 || app[i].tripNum != app[i - 1].tripNum || strcmp(app[i].place, app[i - 1].place) != 0) {
             fprintf(fp_out1, "\nAE%d\n", app[i].tripNum);// Prints trip number to text file
@@ -365,8 +376,8 @@ void SearchPassenger(appointment app[], int *userCounter){
 	int i;
 	
 	printf("Passenger's Lastname: ");
-	scanf("%s", temp);
-    for (i = 0; i <= *userCounter; ++i) {
+	scanf("%19s", temp);  // FIXED: Added field width limit
+    for (i = 0; i < *userCounter; ++i) {  // FIXED: Changed <= to <
         if (strcmp(app[i].lname, temp) == 0) {
         	printf("========== Search =============\n");
             printf("Passenger found:\n");
@@ -381,7 +392,7 @@ void SearchPassenger(appointment app[], int *userCounter){
         }
     }
     if (!found) {
-        printf("Passenger with last name '%s' not found.\n", app[*userCounter].lname);
+        printf("Passenger with last name '%s' not found.\n", temp);  // FIXED: Use temp instead of app[*userCounter].lname
     }
 }
 /* This function is for loading passenger information it will be an alternative way to input passenger information
@@ -391,17 +402,18 @@ void SearchPassenger(appointment app[], int *userCounter){
 */
 void loadPassengerInfo(appointment app[], int *userCounter) {
 	int i;
-	char fileName[21];
+	char fileName[50];  // FIXED: Increased buffer size
 	int newUserCounter = 0; // Counter for the number of new passengers imported
 	
 	FILE *fp_in;
 	printf ("Enter File Name of Data to Import: "); // Allows the user to specify the filename of the text file to import
-	scanf ("%s", fileName);
+	scanf ("%49s", fileName);  // FIXED: Added field width limit
 					
 	fp_in = fopen (fileName, "r"); // opens the file to read and scan into the array of structs
 					
 	if (fp_in == NULL){
 		perror("Cannot Find File, Please Try Again.\n");
+		return;  // FIXED: Added return
 	}	
     // Read and store data from the file
     while (fscanf(fp_in, "AE%d\n", &app[*userCounter].tripNum) == 1) {
@@ -414,9 +426,7 @@ void loadPassengerInfo(appointment app[], int *userCounter) {
         (*userCounter)++;
         newUserCounter++;
     }
-    *userCounter = newUserCounter;
-    printf("Data successfully imported\n");
-     printf("Data imported successfully. Number of passengers: %d\n", newUserCounter);
+    printf("Data imported successfully. Number of passengers: %d\n", newUserCounter);
 	fclose (fp_in);	
 }
 /* This function is for comparing the priority of the user
@@ -469,7 +479,7 @@ int CountPassengersForTrip(appointment app[], int userCounter, int tripNumber) {
     int count = 0;
     int i;
     
-    for (i = 0; i <= userCounter; i++) {
+    for (i = 0; i < userCounter; i++) {  // FIXED: Changed <= to <
         if (app[i].tripNum == tripNumber) {
             count++;
         }
@@ -493,6 +503,43 @@ void displaySeatArrangement(int numPassengers) {
     }
 }
 
+// FIXED: Added implementation for counting passengers by drop-off point
+void CountPassengersByDropOff(appointment app[], int userCounter) {
+    int i, j;
+    string50 dropPoints[MAX_USERS];
+    int counts[MAX_USERS];
+    int numUniqueDrops = 0;
+    int found;
+    
+    // Count occurrences of each drop-off point
+    for (i = 0; i < userCounter; i++) {
+        found = 0;
+        // Check if this drop-off point has been counted
+        for (j = 0; j < numUniqueDrops; j++) {
+            if (strcmp(app[i].DropPoint, dropPoints[j]) == 0) {
+                counts[j]++;
+                found = 1;
+                break;
+            }
+        }
+        // If not found, add new drop-off point
+        if (!found) {
+            strcpy(dropPoints[numUniqueDrops], app[i].DropPoint);
+            counts[numUniqueDrops] = 1;
+            numUniqueDrops++;
+        }
+    }
+    
+    // Display the results
+    printf("==============================================\n");
+    printf("Passenger Count by Drop-off Point:\n");
+    printf("==============================================\n");
+    for (i = 0; i < numUniqueDrops; i++) {
+        printf("%s: %d passenger(s)\n", dropPoints[i], counts[i]);
+    }
+    printf("==============================================\n");
+}
+
 /*This function is for Viewing the number of passengers on a certain trip, View the count of passengers of a specific drop-off point
   View passenger information, Load passenger information, Search passenger, and View any recent trip files via a file load feature.
 	@param app[] - the array of structs containing user information
@@ -503,18 +550,19 @@ void Personnel(appointment app[],int userCounter, char *currentDate){
 	int choice;
 	int tripNumber;
 	int passengerCount;
-	char choice2, choice3;
+	char choice2;
 	
 	
 	do{
 	printf("========== Arrow Express Personnel =============\n");
 	printf("Number of Passengers: %d\n", userCounter);
 	printf("1. View the number of passengers\n");
-	printf("2. View the count of passengers\n");
+	printf("2. View the count of passengers by drop-off point\n");
 	printf("3. View passenger information\n");
 	printf("4. Load passenger information\n");
 	printf("5. Search passenger\n");
 	printf("6. View any recent trip files via a file load feature.\n");
+	printf("7. Exit to Main Menu\n");  // FIXED: Added explicit exit option
 	printf("Enter your choice: ");
 	scanf("%d", &choice);
 	switch(choice){
@@ -528,7 +576,7 @@ void Personnel(appointment app[],int userCounter, char *currentDate){
             displaySeatArrangement(passengerCount);
 			break;
 		case 2:
-			
+			CountPassengersByDropOff(app, userCounter);  // FIXED: Added implementation
 			break;
 		case 3:
 			printf("==============================================\n");
@@ -552,18 +600,16 @@ void Personnel(appointment app[],int userCounter, char *currentDate){
 				scanf(" %c", &choice2); // Read the character for user input
 				    while(getchar() != '\n'); // Consume any remaining characters in the input buffer, including the newline
 				if (choice2 == 'B' || choice2 == 'b'){
-					choice = 9;
-				}else{
-					choice = 1;
+					break;  // Exit the file viewing loop
 				}
 			} while (choice2 == 'Y' || choice2 == 'y');
 			break;
+		case 7:
+			break;  // Exit to main menu
 		default:
 			printf("Invalid choice. Please try again.\n");
 	}
-	}while(choice != 1 && choice != 2 && choice != 3 && choice != 4 && choice != 5 && choice != 6 && choice != 7 && choice != 8); // Repeat until a valid choice (1 to 8) is entered
-
-	
+	}while(choice != 7); // FIXED: Changed exit condition to match the exit option
 }
 /* This function contains the menu for asking if the user is personnel or a passenger.
 	@param app[] - the array of structs containing user information
@@ -592,12 +638,7 @@ void PassengerOrPersonnel(appointment app[], int *userCounter, char *currentDate
 					printf("Enter your choice: ");
 				    scanf(" %c", &choice2); // Read the character for user input
 				    while(getchar() != '\n'); // Consume any remaining characters in the input buffer, including the newline
-					if (choice2 == 'Y' || choice2 == 'y') {
-				        choice = 1; // Continue adding passengers
-				    } else {
-				        choice = 3; // Exit loop if 'Y' is not chosen
-				    }
-				} while (choice == 1);
+				} while (choice2 == 'Y' || choice2 == 'y');  // FIXED: Simplified loop condition
 				break;
 	        case 2:
 	            do{
@@ -607,19 +648,13 @@ void PassengerOrPersonnel(appointment app[], int *userCounter, char *currentDate
 					printf("Enter your choice: ");
 				    scanf(" %c", &choice3); // Read the character for user input
 				    while(getchar() != '\n'); // Consume any remaining characters in the input buffer, including the newline
-				    if (choice3 == 'Y' || choice3 == 'y') {
-				        choice = 1; // Continue viewing the Personnel Menu
-				    } else {
-				        choice = 3; // Exit loop if 'Y' is not chosen
-				    }
-				} while (choice == 1);
+				} while (choice3 == 'Y' || choice3 == 'y');  // FIXED: Simplified loop condition
 	            break;
 	        case 3:
 	        	ExitMenu(app, *userCounter, currentDate);
-	        	choice = 1;
 	        	break;
 	        default:
                 printf("Invalid choice. Please try again.\n");
 	    }	
-	}while(choice != 1 && choice != 2); // Repeat until a valid choice (1 or 2) is entered
+	}while(choice != 3); // FIXED: Changed to exit when choice is 3
 }
