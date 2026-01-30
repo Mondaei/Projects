@@ -106,6 +106,7 @@ checkAndDisplayExistingEntries(entry entries[],
         {
             printf("Is this a new entry? Y/N \n");
             scanf(" %c", &isNewEntry);
+			getchar();
 
             if (isNewEntry == 'Y' || isNewEntry == 'y') 
             {
@@ -113,7 +114,7 @@ checkAndDisplayExistingEntries(entry entries[],
             }
 			else if (isNewEntry == 'N' || isNewEntry == 'n') 
             {
-                manageData(entries, entryCount);
+                return 0;  // FIXED: Return 0 instead of recursively calling manageData
             }
         } while (isNewEntry != 'Y' && isNewEntry != 'y' && isNewEntry != 'N' && isNewEntry != 'n');
     }
@@ -150,11 +151,10 @@ addEntry(entry entries[],
 			switch (delOrBack)
 			{
 				case 1:
-					deleteEntry(entries, &*entryCount);
+					deleteEntry(entries, entryCount);  // FIXED: Removed &*
 					break;
 				case 2:
-					manageData(entries, entryCount);
-					break;
+					return;  // FIXED: Just return instead of calling manageData
 				default:
 	                printf("Invalid choice. Please try again.\n");
 	    	}
@@ -168,8 +168,9 @@ addEntry(entry entries[],
 	scanf(" %20s", entries[currentEntry].pairs[entries[currentEntry].count].language);
 	printf("Enter translation: ");
 	scanf(" %20s",  entries[currentEntry].pairs[entries[currentEntry].count].translation);
+	getchar();
 	
-	checkAndDisplayExistingEntries(entries, entryCount,
+	found = checkAndDisplayExistingEntries(entries, entryCount,
                                         entries[currentEntry].pairs[entries[currentEntry].count].language,
                                         entries[currentEntry].pairs[entries[currentEntry].count].translation);
 	
@@ -186,7 +187,7 @@ addEntry(entry entries[],
 			printf("Y to add and press any letter to go back to the Manage Data Menu\n");
 			printf("Choice: ");
 			scanf(" %c", &addMorePairs);
-			while (getchar() != '\n');
+			getchar();
 			
 			if (addMorePairs == 'Y' || addMorePairs == 'y')
 			{
@@ -194,6 +195,7 @@ addEntry(entry entries[],
 				scanf(" %20s", entries[currentEntry].pairs[entries[currentEntry].count].language);
 				printf("Enter translation: ");
 				scanf(" %20s", entries[currentEntry].pairs[entries[currentEntry].count].translation);
+				getchar();
 				entries[currentEntry].count++;
 				
 				printf("Added new pair:\n");
@@ -219,6 +221,12 @@ deleteEntry(entry entries[],
 	int stopper = 0;
 	char command;
 	
+	if (*entryCount == 0)
+	{
+		printf("No entries to delete.\n");
+		return;
+	}
+	
 	while (stopper == 0)
 	{
 		displaysforModifyDelete(&entries[currentEntry]);
@@ -230,6 +238,7 @@ deleteEntry(entry entries[],
         switch (command)
     	{
     		case 'D':
+    		case 'd':
     			for (i = 0; i < *entryCount; i++) 
 				{
 			        printf("Entry %d:\n", i + 1);
@@ -247,6 +256,7 @@ deleteEntry(entry entries[],
 			    
 			    printf("Enter the number of the entry to delete: ");
 			    scanf("%d", &index);
+				getchar();
 			
 			    
 			    if (index < 1 || index > *entryCount) 
@@ -265,8 +275,14 @@ deleteEntry(entry entries[],
 				(*entryCount)--;
 			
 			    printf("Entry deleted successfully.\n");
+				
+				if (currentEntry >= *entryCount && currentEntry > 0)
+				{
+					currentEntry--;
+				}
 			    break;
 			case 'N':
+			case 'n':
 				if (currentEntry < *entryCount - 1) 
 				{
                     currentEntry++;
@@ -278,6 +294,7 @@ deleteEntry(entry entries[],
 				}
 				break;
 			case 'P':
+			case 'p':
 				if (currentEntry > 0) 
 				{
                     currentEntry--;
@@ -289,10 +306,11 @@ deleteEntry(entry entries[],
 				}
 				break;
 			case 'X':
+			case 'x':
 				stopper = 1;
 				printf("\n===========================\n"); 
-                manageData(entries, entryCount);
-            default:
+                return;  // FIXED: Just return
+			default:
                 printf("Invalid command.\n");
                 break;
 		}	        
@@ -317,6 +335,12 @@ deleteTranslation(entry entries[],
 	int i;
 	char choice;
 	
+	if (*entryCount == 0)
+	{
+		printf("No entries available.\n");
+		return;
+	}
+	
 	while (stopper == 0)
 	{
 		displaysforModifyDelete(&entries[currentEntry]);
@@ -328,6 +352,7 @@ deleteTranslation(entry entries[],
         switch (command)
     	{
     		case 'D':
+    		case 'd':
     			if (entries[currentEntry].count == 0)
 			    {
 			    	printf("There are no language-pair available to delete in this entry.\n");
@@ -337,11 +362,12 @@ deleteTranslation(entry entries[],
 				{
 					printf("\nEnter the pair number to delete (1 to %d): ", entries[currentEntry].count);
     				scanf("%d", &pairNum);
-    				
+    				getchar();
+					
     				if (pairNum < 1 || pairNum > entries[currentEntry].count) 
 					{
 			            printf("Invalid pair number.\n");
-			            return;
+			            choice = 'N';
 			        }
 			        else
 			        {
@@ -377,6 +403,7 @@ deleteTranslation(entry entries[],
 			            
 						printf("Do you want to delete another pair from this entry? Y/N: ");
 			            scanf(" %c", &choice);
+			            getchar();
 			        }
 			        
 			        if (choice == 'N' || choice == 'n') 
@@ -390,6 +417,7 @@ deleteTranslation(entry entries[],
 				}while ((choice == 'Y' || choice == 'y') && entries[currentEntry].count > 0);
 			    break;
 			case 'N':
+			case 'n':
 				if (currentEntry < *entryCount - 1) 
 				{
                     currentEntry++;
@@ -401,6 +429,7 @@ deleteTranslation(entry entries[],
 				}
 				break;
 			case 'P':
+			case 'p':
 				if (currentEntry > 0) 
 				{
                     currentEntry--;
@@ -412,10 +441,11 @@ deleteTranslation(entry entries[],
 				}
 				break;
 			case 'X':
+			case 'x':
 				stopper = 1;
 				printf("\n===========================\n"); 
-                manageData(entries, entryCount);
-            default:
+                return;  // FIXED: Just return
+			default:
                 printf("Invalid command.\n");
                 break;
 		}	        
@@ -468,6 +498,12 @@ displayAllEntries(entry entries[],
     int currentEntry = 0;
     int stopper = 0;
     
+    if (*entryCount == 0)
+	{
+		printf("No entries to display.\n");
+		return;
+	}
+	
     while (stopper == 0) 
 	{
         if (currentEntry >= *entryCount) 
@@ -486,6 +522,7 @@ displayAllEntries(entry entries[],
         switch (command) 
 		{
             case 'N':
+            case 'n':
 				if (currentEntry < *entryCount - 1) 
 				{
                     currentEntry++;
@@ -497,6 +534,7 @@ displayAllEntries(entry entries[],
 				}
                 break;
             case 'P':
+            case 'p':
                 if (currentEntry > 0) 
 				{
                     currentEntry--;
@@ -508,6 +546,7 @@ displayAllEntries(entry entries[],
 				}
                 break;
             case 'X':
+            case 'x':
             	printf("\n===========================\n"); 
                 stopper = 1;
 				return;
@@ -539,7 +578,7 @@ searchWord(entry entries[],
     
     printf("Enter the word to search for: ");
     scanf("%s", search);
-
+	getchar();
 
     
     for ( i = 0; i < *entryCount; i++) 
@@ -549,6 +588,7 @@ searchWord(entry entries[],
             if (strcmp(entries[i].pairs[j].translation, search) == 0) 
 			{
                 matchingEntries[matchCount++] = entries[i];
+                break;  // FIXED: Added break to avoid duplicates
             }
         }
     }
@@ -622,6 +662,7 @@ searchTranslation(entry entries[],
     scanf("%s", language);
     printf("Enter the Translation to search for: ");
     scanf("%s", translation);
+    getchar();
     
     for ( i = 0; i < *entryCount; i++) 
 	{
@@ -631,6 +672,7 @@ searchTranslation(entry entries[],
 				strcmp(entries[i].pairs[j].translation, translation) == 0) 
 			{
                 matchingEntries[matchCount++] = entries[i];
+                break;  // FIXED: Added break to avoid duplicates
             }
         }
     }
@@ -704,6 +746,7 @@ addTranslations(entry entries[],
 	scanf(" %20s", language);
 	printf("Enter translation: ");
 	scanf(" %20s",  translation);
+	getchar();
 	
 	for (i = 0; i < *entryCount; i++) 
     {
@@ -714,8 +757,10 @@ addTranslations(entry entries[],
             {
                 found = 1;
                 index = i;
+                break;  // FIXED: Added break
             }
         }
+        if (found) break;  // FIXED: Added break
     }
     
     if (found == 0) 
@@ -734,6 +779,7 @@ addTranslations(entry entries[],
 		scanf(" %20s", entries[index].pairs[entries[index].count].language);
 		printf("Enter translation: ");
 		scanf(" %20s",  entries[index].pairs[entries[index].count].translation);
+		getchar();
 	
 	    entries[index].count++;
     } 
@@ -750,6 +796,7 @@ addTranslations(entry entries[],
 	                strcmp(entries[i].pairs[j].translation, translation) == 0) 
 	            {
 	                matchFound = 1;
+	                break;  // FIXED: Added break
 	            }
 	        }
 	
@@ -770,6 +817,7 @@ addTranslations(entry entries[],
         
 		printf("Multiple entries found. Enter the entry number to add the translation: ");
         scanf("%d", &choice);
+		getchar();
 
         if (choice > 0 && choice <= *entryCount) 
         {
@@ -780,6 +828,7 @@ addTranslations(entry entries[],
 			scanf(" %20s", entries[index].pairs[entries[index].count].language);
 			printf("Enter translation: ");
 			scanf(" %20s",  entries[index].pairs[entries[index].count].translation);
+			getchar();
 	
 	        entries[index].count++;
     	}
@@ -797,6 +846,7 @@ addTranslations(entry entries[],
         
         printf("Add more translations to the same entry? (Y/N): ");
         scanf(" %c", &response);
+		getchar();
 
         while (response == 'Y' || response == 'y') 
         {
@@ -805,6 +855,7 @@ addTranslations(entry entries[],
 			scanf(" %20s", entries[index].pairs[entries[index].count].language);
 			printf("Enter translation: ");
 			scanf(" %20s",  entries[index].pairs[entries[index].count].translation);
+			getchar();
 	
 	        entries[index].count++;
 
@@ -812,6 +863,7 @@ addTranslations(entry entries[],
             {
                 printf("Add more translations to the same entry? (Y/N): ");
                 scanf(" %c", &response);
+                getchar();
             } 
             else 
             {
@@ -845,8 +897,9 @@ exportData(entry entries[],
 	String30 fileName;
 	int i, j;
 	
-	printf("Enter File Name of Data to Import: "); 
+	printf("Enter File Name of Data to Export: ");  // FIXED: Changed "Import" to "Export"
 	scanf("%30s", fileName);
+	getchar();
 	
 	if ((fp = fopen (fileName, "w")) != NULL)
 	{
@@ -859,10 +912,14 @@ exportData(entry entries[],
 	        
 	        fprintf(fp, "\n");
 		}
+		
+		fclose(fp);
+	    printf("Data exported to %s successfully.\n", fileName);
     }
-
-    fclose(fp);
-    printf("Data exported to %s successfully.\n", fileName);
+	else
+	{
+		printf("Error opening file for export.\n");
+	}
     
 	return;
 }
@@ -885,6 +942,7 @@ importData(entry entries[],
 	
 	printf("Enter File Name of Data to Import: "); 
 	scanf("%30s", fileName);
+	getchar();
 	
 	if ((fp = fopen (fileName, "r")) != NULL)
 	{
@@ -904,6 +962,7 @@ importData(entry entries[],
                 	
 					printf("Add to list? (Y/N): ");
                 	scanf(" %c", &response);
+                	getchar();
                 	
                 	if (response == 'Y' || response == 'y') 
 					{
@@ -937,10 +996,43 @@ importData(entry entries[],
 				}
 			}
 		}
+		
+		// FIXED: Handle last entry if file doesn't end with blank line
+		if (pairIndex > 0)
+		{
+			printf("\n===========================\n\n");
+			printf("Load entry:\n");
+			
+			for (i = 0; i < pairIndex; i++) 
+			{
+            	printf("%s: %s\n",  entries[*entryCount].pairs[i].language, entries[*entryCount].pairs[i].translation);
+        	}
+        	
+			printf("Add to list? (Y/N): ");
+        	scanf(" %c", &response);
+        	getchar();
+        	
+        	if (response == 'Y' || response == 'y') 
+			{
+                if (*entryCount < MAX_ENTRIES) 
+				{
+                    entries[*entryCount].count = pairIndex;
+                	(*entryCount)++;
+                } 
+				else
+				{
+                    printf("Entry list is full.\n");
+                }
+        	}
+		}
+		
+		fclose(fp);
+	    printf("Data imported from %s successfully.\n", fileName);
 	}
-	
-    fclose(fp);
-    printf("Data imported from %s successfully.\n", fileName);
+	else
+	{
+		printf("Error opening file for import.\n");
+	}
 
 }
 /* clearData clears the entries data 
@@ -1011,6 +1103,11 @@ modifyEntry(entry entries[],
 	int pairNum;
 	int modify = 0;
 	
+	if (*entryCount == 0)
+	{
+		printf("No entries to modify.\n");
+		return;
+	}
 	
 	while (stopper == 0)
 	{
@@ -1023,6 +1120,7 @@ modifyEntry(entry entries[],
     	switch (command)
     	{
     		case 'M':
+    		case 'm':
     			if (entries[currentEntry].count == 0)
 			    {
 			    	printf("There are no pairs available to modify in this entry.\n");
@@ -1031,11 +1129,12 @@ modifyEntry(entry entries[],
 				
 				printf("\nEnter the pair number you want to modify (1 to %d): ", entries[currentEntry].count);
     			scanf("%d", &pairNum);
-    			
+    			getchar();
+				
     			if (pairNum < 1 || pairNum > entries[currentEntry].count) 
 				{
 		            printf("Invalid pair number.\n");
-		            return;
+		            break;  // FIXED: Changed return to break to stay in loop
 		        }
     			
     			pairNum--; 
@@ -1045,16 +1144,19 @@ modifyEntry(entry entries[],
 	            printf("2. Translation\n");
 	            printf("Enter your choice: ");
 	            scanf("%d", &modify);
-	                
+	            getchar();
+					
 	            if (modify == 1)
 	            {
 	                printf("Enter language: ");
 					scanf(" %20s", entries[currentEntry].pairs[pairNum].language);
+					getchar();
 				}
 				else if (modify == 2)
 				{
 					printf("Enter translation: ");
 					scanf(" %20s", entries[currentEntry].pairs[pairNum].translation);
+					getchar();
 				}
 				else
 				{
@@ -1063,6 +1165,7 @@ modifyEntry(entry entries[],
 				}
 				break;
 			case 'N':
+			case 'n':
 				if (currentEntry < *entryCount - 1) 
 				{
                     currentEntry++;
@@ -1074,6 +1177,7 @@ modifyEntry(entry entries[],
 				}
 				break;
 			case 'P':
+			case 'p':
 				if (currentEntry > 0) 
 				{
                     currentEntry--;
@@ -1085,6 +1189,7 @@ modifyEntry(entry entries[],
 				}
 				break;
 			case 'X':
+			case 'x':
 				stopper = 1;
 				printf("\n===========================\n"); 
                 return;
@@ -1128,19 +1233,19 @@ manageData(entry entries[],
 		switch (choice)
 		{
 			case 1:
-				addEntry(entries, &*entryCount);
+				addEntry(entries, entryCount);  // FIXED: Removed all &*
 				break;
 			case 2:
-				addTranslations(entries, &*entryCount);
+				addTranslations(entries, entryCount);
 				break;
 			case 3:
-				modifyEntry(entries, &*entryCount);
+				modifyEntry(entries, entryCount);
 				break;
 			case 4:
-				deleteEntry(entries, &*entryCount);
+				deleteEntry(entries, entryCount);
 				break;
 			case 5:
-				deleteTranslation(entries, &*entryCount);
+				deleteTranslation(entries, entryCount);
 				break;
 			case 6:
 				displayAllEntries(entries, entryCount); 
@@ -1155,17 +1260,15 @@ manageData(entry entries[],
 				exportData(entries, entryCount);
 				break;
 			case 10:
-				importData(entries, &*entryCount);
+				importData(entries, entryCount);
 				break;
 			case 11:
 				stopper = 1;
-				clearData(entries, &*entryCount);
+				clearData(entries, entryCount);
 				return;
-				break;
 			
 			default:
                 printf("Invalid choice. Please try again.\n");
 		}	
 	}
 }
-

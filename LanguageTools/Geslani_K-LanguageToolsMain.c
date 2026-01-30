@@ -39,9 +39,9 @@ main()
 				break;
 			default:
                 printf("Invalid choice. Please try again.\n");
+                break;  // FIXED: Added missing break
 		}	
 	}
+	
 	return 0;
 }
-
-
